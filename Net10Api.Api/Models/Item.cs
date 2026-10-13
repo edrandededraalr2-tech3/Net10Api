@@ -1,3 +1,5 @@
+using System;
+
 namespace Net10Api.Api.Models;
 
 public record Item(

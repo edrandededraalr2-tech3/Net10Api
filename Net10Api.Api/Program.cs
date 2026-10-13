@@ -1,4 +1,11 @@
+using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.OpenApi;
 using Net10Api.Api.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,16 +17,17 @@ builder.WebHost.UseUrls($"http://*:{port}");
 builder.Services.AddSingleton<IItemService, ItemService>();
 builder.Services.AddControllers();
 
-// OpenAPI nativo de .NET 10 (sin dependencias externas de terceros)
+// OpenAPI nativo de .NET 10
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Habilitar la interfaz OpenAPI en desarrollo o producción
-app.MapOpenApi();
+// Habilitar la interfaz OpenAPI
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
 
-// Redirección opcional o mapeo directo de endpoints de la API
-app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
